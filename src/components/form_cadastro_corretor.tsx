@@ -1,32 +1,32 @@
-import axios from 'axios';
-import { useState } from 'react';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-import '../styles/formulario.css';
-import Header from './header';
+import axios from "axios";
+import { FormEvent, useState } from "react";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import "../styles/formulario.css";
+import Header from "./header";
 
 const FormCadastroCorretor = () => {
-  const [name, setNome] = useState('');
-  const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [creci, setCreci] = useState('');
+  const [name, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [creci, setCreci] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const data = {
       name,
       email,
       senha,
-      creci
+      creci,
     };
-    axios.post('URL_DA_API', data)
+    axios
+      .post("URL_DA_API", data)
       .then((response) => {
-        console.log('Dados enviados com sucesso:', response.data);
-
+        console.log("Dados enviados com sucesso:", response.data);
       })
       .catch((error) => {
-        console.error('Erro ao enviar dados:', error);
+        console.error("Erro ao enviar dados:", error);
       });
   };
 
@@ -64,11 +64,7 @@ const FormCadastroCorretor = () => {
               placeholder="Digite sua senha"
               required
             />
-            <button
-              type="button"
-              className="show-password-button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
+            <button type="button" className="show-password-button" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </button>
           </div>

@@ -1,15 +1,15 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Componente from './components/comodos_componentes';
-import FormCadastro from './components/form_cadastro';
-import FormCorretor from './components/form_cadastro_corretor';
-import Home from './components/home';
-import Login from './components/login';
-import Pesquisa from './components/pesquisa';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Componente from "./components/comodos_componentes";
+import FormCadastro from "./components/form_cadastro";
+import FormCorretor from "./components/form_cadastro_corretor";
+import Home from "./components/home";
+import Login from "./components/login";
+import Pesquisa from "./components/pesquisa";
 
-const PrivateRoute = ({ element, ...rest }) => {
-  const isLoggedIn = localStorage.getItem('token');
-  return isLoggedIn ? <Route {...rest} element={element} /> : <Navigate to="/" replace />;
-};
+// const PrivateRoute = ({ element, ...rest }) => {
+//   const isLoggedIn = localStorage.getItem('token');
+//   return isLoggedIn ? <Route {...rest} element={element} /> : <Navigate to="/" replace />;
+// };
 
 const App = () => {
   return (
