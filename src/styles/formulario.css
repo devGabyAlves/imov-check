@@ -1,0 +1,43 @@
+/* formulario.css */
+
+.formulario-container {
+    background-color: #fff; /* Fundo branco */
+    padding: 20px; /* Espaçamento interno */
+    border-radius: 8px; /* Bordas arredondadas */
+    max-width: 400px; /* Largura máxima do formulário */
+    margin: 0 auto; /* Centralizar o formulário na tela */
+  }
+  
+  .formulario-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .formulario-input {
+    margin-bottom: 20px; /* Espaçamento entre os campos */
+    padding: 10px; /* Espaçamento interno */
+    border: 1px solid #ccc; /* Borda cinza */
+    border-radius: 4px; /* Bordas arredondadas */
+    font-size: 16px; /* Tamanho da fonte */
+    width: 100%; /* Largura total do campo */
+  }
+  
+  .formulario-submit-button {
+    padding: 10px 20px; /* Espaçamento interno */
+    background-color: #6a1b9a; /* Cor de fundo roxa */
+    color: #fff; /* Cor do texto branco */
+    border: none; /* Sem borda */
+    border-radius: 4px; /* Bordas arredondadas */
+    font-size: 16px; /* Tamanho da fonte */
+    cursor: pointer; /* Cursor de ponteiro ao passar por cima */
+    transition: background-color 0.3s ease; /* Transição suave da cor de fundo */
+  }
+  
+  .formulario-submit-button:hover {
+    background-color: #4a148c; /* Cor de fundo roxa mais escura ao passar por cima */
+  }
+  
+
+  /* ################################### */
+
+  

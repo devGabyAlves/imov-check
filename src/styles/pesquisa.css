@@ -1,0 +1,46 @@
+.pesquisa-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px; /* Ajuste conforme necessário */
+  }
+  
+  .titulo {
+    font-family: 'Caviar Dream', sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px; /* Espaçamento entre o título e o texto */
+  }
+  
+  .description {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 20px; /* Espaçamento entre o texto e a barra de pesquisa */
+  }
+  
+  .pesquisa-input {
+    width: 300px; /* Ajuste conforme necessário */
+    height: 40px; /* Ajuste conforme necessário */
+    padding: 10px;
+    margin-bottom: 20px; /* Espaçamento entre a barra de pesquisa e o botão */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .pesquisa-button {
+    width: 200px; /* Ajuste conforme necessário */
+    height: 40px; /* Ajuste conforme necessário */
+    background-color: #673ab7; /* Deep purple */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .pesquisa-button:hover {
+    background-color: #5a2d99; /* Deep purple mais escuro no hover */
+  }
+  
