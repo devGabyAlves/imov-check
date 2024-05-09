@@ -1,6 +1,8 @@
 import axios from "axios";
-import { FormEvent, useState } from "react";
-import "../styles/formulario.css";
+import { useState } from "react";
+import FormButton from "./FormButton";
+import FormContainer from "./FormContainer";
+import FormField from "./FormField";
 import Header from "./header";
 
 const Formulario = () => {
@@ -17,7 +19,7 @@ const Formulario = () => {
   const [testemunha, setTestemunha] = useState("");
   const [administradora, setAdministradora] = useState("");
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
@@ -35,7 +37,6 @@ const Formulario = () => {
         testemunha,
         administradora,
       });
-
       console.log("Resposta da API:", response.data);
     } catch (error) {
       console.error("Erro ao enviar o formulário:", error);
@@ -45,77 +46,124 @@ const Formulario = () => {
   return (
     <>
       <Header />
-      <div className="formulario-container">
-        <form onSubmit={handleSubmit} className="formulario-form">
-          <label htmlFor="idImovel">ID-Imóvel:</label>
-          <input type="text" id="idImovel" value={idImovel} onChange={(e) => setIdImovel(e.target.value)} />
-          <label htmlFor="data">Data:</label>
-          <input type="date" id="data" value={data} onChange={(e) => setData(e.target.value)} />
-          <label htmlFor="vistoriador">Vistoriador:</label>
-          <input type="text" id="vistoriador" value={vistoriador} onChange={(e) => setVistoriador(e.target.value)} />
-          <label htmlFor="corretor">Corretor:</label>
-          <input type="text" id="corretor" value={corretor} onChange={(e) => setCorretor(e.target.value)} />
-          <label htmlFor="tipoVistoria">Tipo de Vistoria:</label>
-          <select id="tipoVistoria" value={tipoVistoria} onChange={(e) => setTipoVistoria(e.target.value)}>
-            <option value="">Selecione</option>
-            <option value="entrada">Entrada</option>
-            <option value="saida">Saída</option>
-          </select>
-          <label htmlFor="endereco">Endereço:</label>
-          <input
+      <FormContainer>
+        <form onSubmit={handleSubmit}>
+          <FormField
+            label="ID-Imóvel:"
             type="text"
-            id="cep"
-            placeholder="CEP"
+            value={idImovel}
+            onChange={(e) => setIdImovel(e.target.value)}
+            placeholder="Digite o ID do Imóvel"
+          />
+          <FormField
+            label="Data:"
+            type="date"
+            value={data}
+            onChange={(e) => setData(e.target.value)}
+            placeholder="Escolha uma data"
+          />
+          <FormField
+            label="Vistoriador:"
+            type="text"
+            value={vistoriador}
+            onChange={(e) => setVistoriador(e.target.value)}
+            placeholder="Nome do Vistoriador"
+          />
+          <FormField
+            label="Corretor:"
+            type="text"
+            value={corretor}
+            onChange={(e) => setCorretor(e.target.value)}
+            placeholder="Nome do Corretor"
+          />
+
+          <div className="flex flex-col mb-5">
+            <label htmlFor="tipoVistoria">Tipo de Vistoria:</label>
+
+            <select id="tipoVistoria" value={tipoVistoria} onChange={(e) => setTipoVistoria(e.target.value)}>
+              <option value="">Selecione</option>
+              <option value="entrada">Entrada</option>
+              <option value="saida">Saída</option>
+            </select>
+          </div>
+
+          <FormField
+            label="Endereço (CEP):"
+            type="text"
             value={endereco.cep}
             onChange={(e) => setEndereco({ ...endereco, cep: e.target.value })}
+            placeholder="Digite o CEP"
           />
-          <input
+          <FormField
+            label="Endereço (Bairro):"
             type="text"
-            id="bairro"
-            placeholder="Bairro"
             value={endereco.bairro}
             onChange={(e) => setEndereco({ ...endereco, bairro: e.target.value })}
+            placeholder="Digite o Bairro"
           />
-          <input
+          <FormField
+            label="Endereço (Número):"
             type="text"
-            id="numero"
-            placeholder="Número"
             value={endereco.numero}
             onChange={(e) => setEndereco({ ...endereco, numero: e.target.value })}
+            placeholder="Digite o Número"
           />
-          <input
+          <FormField
+            label="Endereço (Complemento):"
             type="text"
-            id="complemento"
-            placeholder="Complemento"
             value={endereco.complemento}
             onChange={(e) => setEndereco({ ...endereco, complemento: e.target.value })}
+            placeholder="Digite o Complemento"
           />
-          <label htmlFor="metragem">Metragem do Imóvel:</label>
-          <input type="number" id="metragem" value={metragem} onChange={(e) => setMetragem(e.target.value)} />
-          <label htmlFor="mobiliado">Mobiliado:</label>
-          <select id="mobiliado" value={mobiliado} onChange={(e) => setMobiliado(e.target.value)}>
-            <option value="">Selecione</option>
-            <option value="sim">Sim</option>
-            <option value="nao">Não</option>
-          </select>
-          <label htmlFor="locador">Locador:</label>
-          <input type="text" id="locador" value={locador} onChange={(e) => setLocador(e.target.value)} />
-          <label htmlFor="locatario">Locatário:</label>
-          <input type="text" id="locatario" value={locatario} onChange={(e) => setLocatario(e.target.value)} />
-          <label htmlFor="testemunha">Testemunha:</label>
-          <input type="text" id="testemunha" value={testemunha} onChange={(e) => setTestemunha(e.target.value)} />
-          <label htmlFor="administradora">Administradora:</label>
-          <input
+          <FormField
+            label="Metragem do Imóvel:"
+            type="number"
+            value={metragem}
+            onChange={(e) => setMetragem(e.target.value)}
+            placeholder="Metragem em m²"
+          />
+
+          <div className="flex flex-col mb-5">
+            <label htmlFor="mobiliado">Mobiliado:</label>
+
+            <select id="mobiliado" value={mobiliado} onChange={(e) => setMobiliado(e.target.value)}>
+              <option value="">Selecione</option>
+              <option value="sim">Sim</option>
+              <option value="nao">Não</option>
+            </select>
+          </div>
+
+          <FormField
+            label="Locador:"
             type="text"
-            id="administradora"
+            value={locador}
+            onChange={(e) => setLocador(e.target.value)}
+            placeholder="Nome do Locador"
+          />
+          <FormField
+            label="Locatário:"
+            type="text"
+            value={locatario}
+            onChange={(e) => setLocatario(e.target.value)}
+            placeholder="Nome do Locatário"
+          />
+          <FormField
+            label="Testemunha:"
+            type="text"
+            value={testemunha}
+            onChange={(e) => setTestemunha(e.target.value)}
+            placeholder="Nome da Testemunha"
+          />
+          <FormField
+            label="Administradora:"
+            type="text"
             value={administradora}
             onChange={(e) => setAdministradora(e.target.value)}
+            placeholder="Nome da Administradora"
           />
-          <button type="submit" className="formulario-submit-button">
-            Enviar
-          </button>{" "}
+          <FormButton>Enviar</FormButton>
         </form>
-      </div>
+      </FormContainer>
     </>
   );
 };

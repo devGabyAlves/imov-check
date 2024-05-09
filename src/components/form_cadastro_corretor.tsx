@@ -1,7 +1,9 @@
 import axios from "axios";
-import { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import "../styles/formulario.css";
+import FormButton from "./FormButton";
+import FormContainer from "./FormContainer";
+import FormField from "./FormField";
 import Header from "./header";
 
 const FormCadastroCorretor = () => {
@@ -11,77 +13,63 @@ const FormCadastroCorretor = () => {
   const [creci, setCreci] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    const data = {
-      name,
-      email,
-      senha,
-      creci,
-    };
-    axios
-      .post("URL_DA_API", data)
-      .then((response) => {
-        console.log("Dados enviados com sucesso:", response.data);
-      })
-      .catch((error) => {
-        console.error("Erro ao enviar dados:", error);
-      });
+    const data = { name, email, senha, creci };
+    try {
+      const response = await axios.post("URL_DA_API", data);
+      console.log("Dados enviados com sucesso:", response.data);
+    } catch (error) {
+      console.error("Erro ao enviar dados:", error);
+    }
   };
 
   return (
     <>
       <Header />
 
-      <div className="formulario-container">
-        <form className="formulario-form" onSubmit={handleSubmit}>
-          <label>Nome:</label>
-          <input
+      <FormContainer>
+        <form onSubmit={handleSubmit}>
+          <FormField
+            label="Nome:"
             type="text"
             value={name}
             onChange={(e) => setNome(e.target.value)}
-            className="formulario-input"
             placeholder="Digite seu nome"
             required
           />
-          <label>Email:</label>
-          <input
+          <FormField
+            label="Email:"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="formulario-input"
             placeholder="Digite seu email"
             required
           />
-          <label>Senha:</label>
-          <div className="password-input-container">
-            <input
+          <div className="password-input-container flex mb-5">
+            <FormField
+              label="Senha:"
               type={showPassword ? "text" : "password"}
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
-              className="formulario-input password-input"
               placeholder="Digite sua senha"
               required
             />
-            <button type="button" className="show-password-button" onClick={() => setShowPassword(!showPassword)}>
+            <button type="button" className="ml-2 text-purple-600" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
             </button>
           </div>
-          <label>CRECI:</label>
-          <input
+          <FormField
+            label="CRECI:"
             type="text"
             value={creci}
             onChange={(e) => setCreci(e.target.value)}
-            className="formulario-input"
             placeholder="Digite seu CRECI"
             required
           />
-          <button type="submit" className="formulario-submit-button">
-            Enviar
-          </button>
+          <FormButton>Enviar</FormButton>
         </form>
-      </div>
+      </FormContainer>
     </>
   );
 };
