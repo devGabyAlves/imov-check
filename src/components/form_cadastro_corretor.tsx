@@ -4,7 +4,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import FormButton from "./FormButton";
 import FormContainer from "./FormContainer";
 import FormField from "./FormField";
-import Header from "./header";
+import Header from "./Header";
 
 const FormCadastroCorretor = () => {
   const [name, setNome] = useState("");

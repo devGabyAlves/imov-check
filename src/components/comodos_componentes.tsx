@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 // import '../styles/styles.css';
-import Header from './header';
+import Header from './Header';
 import Menu from './menu';
 
 interface Component {
