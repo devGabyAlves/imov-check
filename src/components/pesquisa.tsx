@@ -10,7 +10,8 @@ const Pesquisa = () => {
       <div className="pesquisa-container">
         <h1 className="titulo">Pesquisa de imóvel</h1>
         <p className="description">
-          Aqui você faz a pesquisa do seu imóvel cadastrado através do ID do seu imóvel. Caso não encontre o imóvel, deverá ser cadastrado através do botão "Cadastro" acima.
+          Aqui você faz a pesquisa do seu imóvel cadastrado através do ID do seu imóvel. Caso não encontre o imóvel,
+          deverá ser cadastrado através do botão "Cadastro" acima.
         </p>
         <input type="text" className="pesquisa-input" placeholder="Digite sua pesquisa" />
         <button className="pesquisa-button">Pesquisar</button>
