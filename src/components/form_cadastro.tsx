@@ -80,7 +80,12 @@ const Formulario = () => {
           <div className="flex flex-col mb-5">
             <label htmlFor="tipoVistoria">Tipo de Vistoria:</label>
 
-            <select id="tipoVistoria" value={tipoVistoria} onChange={(e) => setTipoVistoria(e.target.value)}>
+            <select
+              id="tipoVistoria"
+              value={tipoVistoria}
+              onChange={(e) => setTipoVistoria(e.target.value)}
+              className="mb-5 p-2.5 border border-gray-300 rounded-md text-lg w-full"
+            >
               <option value="">Selecione</option>
               <option value="entrada">Entrada</option>
               <option value="saida">Saída</option>
@@ -126,7 +131,12 @@ const Formulario = () => {
           <div className="flex flex-col mb-5">
             <label htmlFor="mobiliado">Mobiliado:</label>
 
-            <select id="mobiliado" value={mobiliado} onChange={(e) => setMobiliado(e.target.value)}>
+            <select
+              id="mobiliado"
+              value={mobiliado}
+              onChange={(e) => setMobiliado(e.target.value)}
+              className="mb-5 p-2.5 border border-gray-300 rounded-md text-lg w-full"
+            >
               <option value="">Selecione</option>
               <option value="sim">Sim</option>
               <option value="nao">Não</option>
