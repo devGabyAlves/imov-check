@@ -3,7 +3,7 @@ import { useState } from "react";
 import FormButton from "./FormButton";
 import FormContainer from "./FormContainer";
 import FormField from "./FormField";
-import Header from "./header";
+import Header from "./Header";
 
 const Formulario = () => {
   const [idImovel, setIdImovel] = useState("");
