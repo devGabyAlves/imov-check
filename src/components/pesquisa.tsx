@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Header from './Header';
@@ -9,12 +8,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  marginTop: '30px',  
+  marginTop: '30px'
 }));
 
 const StyledTextField = styled(TextField)({
   width: '50%',
-  marginBottom: '20px',
+  marginBottom: '20px'
 });
 
 const Pesquisa = () => {
@@ -23,11 +22,11 @@ const Pesquisa = () => {
       <Header />
       <Menu />
       <StyledBox>
-      <Typography variant="h4" gutterBottom sx={{ color: '#673ab7' }}>
+        <Typography variant="h4" gutterBottom sx={{ color: '#673ab7' }}>
           Pesquisa de imóvel
         </Typography>
         <Typography variant="body1" paragraph>
-          Use o ID para buscar seu imóvel cadastrado. Se o imóvel não estiver registrado, utilize o botão 
+          Use o ID para buscar seu imóvel cadastrado. Se o imóvel não estiver registrado, utilize o botão
           <span style={{ color: '#673ab7' }}> 'Cadastro' </span>
           acima para adicioná-lo.
         </Typography>

@@ -1,6 +1,5 @@
 import React, { FormEvent, useContext, useState } from 'react';
 import { Button, TextField, FormControlLabel, Checkbox, Typography, Container } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 
 interface UserData {
@@ -29,18 +28,17 @@ interface LoginFormProps {
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-
 const AuthContext = React.createContext<AuthContextI>({} as AuthContextI);
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hierarchy, setHierarchy] = useState('');
-  const [realtyList, setRealtyList] = useState([]);
+  const [realtyList] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
   const fetchRealtyList = async () => {};
-  const handleLogin = async (userData: UserData) => {};
+  const handleLogin = async () => {};
 
   const style: React.CSSProperties = {
     display: 'flex',
@@ -48,14 +46,16 @@ const Login = () => {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    width: '100vw',
+    width: '100vw'
   };
 
   return (
     <>
       <Header />
       <Container component="main" style={style}>
-        <Typography component="h1" variant="h5" sx={{ color: "#673ab7" }}>Login</Typography>
+        <Typography component="h1" variant="h5" sx={{ color: '#673ab7' }}>
+          Login
+        </Typography>
         <AuthContext.Provider value={{ handleLogin }}>
           <LoginForm
             username={username}
@@ -74,7 +74,6 @@ const Login = () => {
     </>
   );
 };
-
 
 const LoginForm = ({
   username,
@@ -109,18 +108,18 @@ const LoginForm = ({
         autoComplete="username"
         autoFocus
         value={username}
-        onChange={e => setUsername(e.target.value)}
+        onChange={(e) => setUsername(e.target.value)}
         sx={{
-          backgroundColor: '#f3f3f3', 
+          backgroundColor: '#f3f3f3',
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#673ab7', 
+              borderColor: '#673ab7'
             },
             '&:hover fieldset': {
-              borderColor: '#5e35b1', 
+              borderColor: '#5e35b1'
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1', 
+              borderColor: '#5e35b1'
             }
           }
         }}
@@ -136,18 +135,18 @@ const LoginForm = ({
         id="password"
         autoComplete="current-password"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
         sx={{
-          backgroundColor: '#f3f3f3', 
+          backgroundColor: '#f3f3f3',
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#673ab7', 
+              borderColor: '#673ab7'
             },
             '&:hover fieldset': {
-              borderColor: '#5e35b1', 
+              borderColor: '#5e35b1'
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1', 
+              borderColor: '#5e35b1'
             }
           }
         }}
@@ -158,9 +157,9 @@ const LoginForm = ({
             checked={showPassword}
             onChange={toggleShowPassword}
             sx={{
-              color: '#673ab7', 
+              color: '#673ab7',
               '&.Mui-checked': {
-                color: '#673ab7', 
+                color: '#673ab7'
               }
             }}
           />
@@ -177,19 +176,19 @@ const LoginForm = ({
         name="hierarchy"
         autoComplete="hierarchy"
         value={hierarchy}
-        onChange={e => setHierarchy(e.target.value)}
+        onChange={(e) => setHierarchy(e.target.value)}
         onFocus={fetchRealtyList}
         sx={{
-          backgroundColor: '#f3f3f3', 
+          backgroundColor: '#f3f3f3',
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#673ab7', 
+              borderColor: '#673ab7'
             },
             '&:hover fieldset': {
-              borderColor: '#5e35b1',
+              borderColor: '#5e35b1'
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1', 
+              borderColor: '#5e35b1'
             }
           }
         }}

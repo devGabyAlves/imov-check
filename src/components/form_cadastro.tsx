@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
-import { Container, TextField, Button, FormControl, InputLabel, Select, MenuItem, Typography, Grid } from '@mui/material';
+import {
+  Container,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Typography,
+  Grid
+} from '@mui/material';
 import Header from './Header';
 
 const Formulario = () => {
-  const [idImovel, setIdImovel] = useState("");
-  const [data, setData] = useState("");
-  const [vistoriador, setVistoriador] = useState("");
-  const [corretor, setCorretor] = useState("");
-  const [tipoVistoria, setTipoVistoria] = useState("");
-  const [endereco, setEndereco] = useState({ cep: "", bairro: "", numero: "", complemento: "" });
-  const [metragem, setMetragem] = useState("");
-  const [mobiliado, setMobiliado] = useState("");
-  const [locador, setLocador] = useState("");
-  const [locatario, setLocatario] = useState("");
-  const [testemunha, setTestemunha] = useState("");
-  const [administradora, setAdministradora] = useState("");
+  const [idImovel, setIdImovel] = useState('');
+  const [data, setData] = useState('');
+  const [vistoriador, setVistoriador] = useState('');
+  const [corretor, setCorretor] = useState('');
+  const [tipoVistoria, setTipoVistoria] = useState('');
+  const [metragem, setMetragem] = useState('');
+  const [mobiliado, setMobiliado] = useState('');
+  const [locador, setLocador] = useState('');
+  const [locatario, setLocatario] = useState('');
+  const [testemunha, setTestemunha] = useState('');
+  const [administradora, setAdministradora] = useState('');
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,7 +33,7 @@ const Formulario = () => {
     <>
       <Header />
       <Container maxWidth="md">
-      <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
+        <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
           Formulário de Vistoria
         </Typography>
         <form onSubmit={handleSubmit}>
@@ -154,7 +163,11 @@ const Formulario = () => {
             </Grid>
           </Grid>
           <Grid container justifyContent="center" sx={{ mt: 3 }}>
-            <Button type="submit" variant="contained" sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}>
+            <Button
+              type="submit"
+              variant="contained"
+              sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}
+            >
               Enviar
             </Button>
           </Grid>
