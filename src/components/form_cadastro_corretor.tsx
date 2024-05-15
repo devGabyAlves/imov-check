@@ -1,21 +1,18 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import FormButton from "./FormButton";
-import FormContainer from "./FormContainer";
-import FormField from "./FormField";
+import { Container, TextField, Button, Typography, Grid } from '@mui/material';
 import Header from "./Header";
 
 const FormCadastroCorretor = () => {
   const [name, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [creci, setCreci] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = { name, email, senha, creci };
+    const data = { name, email, senha, confirmarSenha };
     try {
       const response = await axios.post("URL_DA_API", data);
       console.log("Dados enviados com sucesso:", response.data);
@@ -27,49 +24,58 @@ const FormCadastroCorretor = () => {
   return (
     <>
       <Header />
-
-      <FormContainer>
+      <Container maxWidth="md">
+        <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
+          Formulário de Corretor
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <FormField
-            label="Nome:"
-            type="text"
-            value={name}
-            onChange={(e) => setNome(e.target.value)}
-            placeholder="Digite seu nome"
-            required
-          />
-          <FormField
-            label="Email:"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Digite seu email"
-            required
-          />
-          <div className="password-input-container flex mb-5">
-            <FormField
-              label="Senha:"
-              type={showPassword ? "text" : "password"}
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-              placeholder="Digite sua senha"
-              required
-            />
-            <button type="button" className="ml-2 text-purple-600" onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-            </button>
-          </div>
-          <FormField
-            label="CRECI:"
-            type="text"
-            value={creci}
-            onChange={(e) => setCreci(e.target.value)}
-            placeholder="Digite seu CRECI"
-            required
-          />
-          <FormButton>Enviar</FormButton>
+              <TextField
+                fullWidth
+                label="Nome:"
+                variant="outlined"
+                value={name}
+                onChange={(e) => setNome(e.target.value)}
+                margin="normal"
+                placeholder="Digite seu nome"
+                required
+                sx={{ width: 240 }}
+              />
+              <TextField
+                fullWidth
+                label="Email:"
+                type="email"
+                variant="outlined"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Digite seu email"
+                required
+                sx={{ width: 240 }}
+              />
+              <TextField
+                label="Senha:"
+                type="password"
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+                placeholder="Digite sua senha"
+                required
+                sx={{ width: 240 }}
+              />
+              <TextField
+                label="Confirmar Senha:"
+                type="password"
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                placeholder="Digite sua senha novamente"
+                required
+                sx={{ width: 240 }}
+              />
+          <Grid container justifyContent="center" sx={{ mt: 3 }}>
+            <Button type="submit" variant="contained" sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}>
+              Enviar
+            </Button>
+          </Grid>
         </form>
-      </FormContainer>
+      </Container>
     </>
   );
 };

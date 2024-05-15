@@ -1,45 +1,53 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
 
 const Dropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
   const [selectedOption, setSelectedOption] = useState("");
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    setIsOpen(false);
+    handleClose();
   };
 
   return (
-    <div className="relative inline-block">
-      {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
-      <div className="px-2.5 bg-purple-700 text-white cursor-pointer" onClick={toggleDropdown}>
+    <div>
+      <Button
+        sx={{ color: 'white', backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}
+        onClick={handleClick}
+      >
         Cadastro
-      </div>
-      {isOpen && (
-        <div className="absolute top-full left-0 bg-white border border-t-0 border-purple-700 rounded-b-md z-10">
-          {/* Use o Link para cada opção do dropdown */}
-          <Link
-            to="/cadastro_imovel"
-            className="px-2.5 cursor-pointer text-purple-700"
-            onClick={() => handleOptionClick("Imóvel")}
-          >
-            Imóvel
-          </Link>
-          <Link
-            to="/cadastro_corretor"
-            className="px-2.5 cursor-pointer text-purple-700"
-            onClick={() => handleOptionClick("Novo Corretor")}
-          >
-            Novo Corretor
-          </Link>
-        </div>
-      )}
-      {selectedOption && <div className="mt-2.5 text-purple-700">Você selecionou: {selectedOption}</div>}
+      </Button>
+      <Menu
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right'
+        }}
+      >
+        <MenuItem onClick={() => handleOptionClick("Novo Imóvel")} component={Link} to="/cadastro_imovel">Imóvel</MenuItem>
+        <MenuItem onClick={() => handleOptionClick("Novo Corretor")} component={Link} to="/cadastro_corretor">Corretor</MenuItem>
+      </Menu>
+      {selectedOption && <Typography color="purple" sx={{ mt: 1 }}>Você selecionou: {selectedOption}</Typography>}
     </div>
   );
 };
