@@ -1,20 +1,38 @@
-import { Link } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
+import { Container, Typography, Button, Box } from '@mui/material';
 import Header from './Header';
 
 const Home = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-primary text-secondary" style={{ paddingTop: '50px' }}>
+    <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', pt: '50px' }}>
       <Header />
-      <div className="text-center max-w-md p-8 -mt-24">
-        <h1 className="text-3xl font-bold">Bem-vindo ao ImovCheck</h1>
-        <p className="mt-4 text-lg">
+      <Box sx={{ textAlign: 'center', p: 2, mt: -6 }}>
+        <Typography variant="h3" component="h1" fontWeight="bold">
+          Bem-vindo ao ImovCheck
+        </Typography>
+        <Typography variant="subtitle1" sx={{ mt: 2 }}>
           ImovCheck é sua solução completa para avaliação e gestão de imóveis. Com inputs flexíveis e processamento de imagens, nossa ferramenta permite criar relatórios detalhados do imóvel, disponíveis em PDF para anexar em contratos ou utilização em outras finalidades essenciais.
-        </p>
-        <Link to="/login" className="inline-block mt-6 px-6 py-3 bg-secondary text-primary font-bold rounded hover:bg-white hover:text-primary transition-colors duration-300">
+        </Typography>
+        <Button
+          component={RouterLink}
+          to="/login"
+          variant="contained"
+          sx={{
+            mt: 3,
+            py: 1.5,
+            px: 3,
+            color: 'white',
+            backgroundColor: '#673ab7',
+            ':hover': {
+              bgcolor: '#5e35b1', 
+              color: 'black' 
+            }
+          }}
+        >
           Clique aqui para realizar o Login
-        </Link>
-      </div>
-    </div>
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

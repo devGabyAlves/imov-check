@@ -1,8 +1,6 @@
-import axios from 'axios';
 import React, { FormEvent, useContext, useState } from 'react';
-import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { Button, TextField, FormControlLabel, Checkbox, Typography, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import '../styles/login.css';
 import Header from './Header';
 
 interface UserData {
@@ -15,7 +13,24 @@ type AuthContextI = {
   handleLogin: (userData: UserData) => void;
 };
 
-const AuthContext = React.createContext<AuthContextI>({} as unknown as AuthContextI);
+interface LoginFormProps {
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  password: string;
+  setPassword: React.Dispatch<React.SetStateAction<string>>;
+  hierarchy: string;
+  setHierarchy: React.Dispatch<React.SetStateAction<string>>;
+  realtyList: {
+    id: number;
+    name: string;
+  }[];
+  fetchRealtyList: () => void;
+  showPassword: boolean;
+  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+const AuthContext = React.createContext<AuthContextI>({} as AuthContextI);
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -23,40 +38,24 @@ const Login = () => {
   const [hierarchy, setHierarchy] = useState('');
   const [realtyList, setRealtyList] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
 
-  const fetchRealtyList = async () => {
-    try {
-      const response = await axios.get('URL_DA_SUA_API_FLASK/imobiliarias');
-      setRealtyList(response.data);
-    } catch (error) {
-      console.error('Erro ao buscar lista de imobiliárias:', error);
-    }
-  };
+  const fetchRealtyList = async () => {};
+  const handleLogin = async (userData: UserData) => {};
 
-  const handleLogin = async (userData: UserData) => {
-    try {
-      const response = await axios.post('http://127.0.0.1:5000/login', userData);
-
-      console.log('Resposta da API:', response.data);
-
-      if (response.status === 200) {
-        localStorage.setItem('token', response.data.token);
-
-        alert('Login Realizado com sucesso!');
-
-        navigate('/pesquisa');
-      }
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-    }
+  const style: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    width: '100vw',
   };
 
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center h-screen bg-primary text-secondary p-4">
-        <h2 className="mb-4">Login</h2>
+      <Container component="main" style={style}>
+        <Typography component="h1" variant="h5" sx={{ color: "#673ab7" }}>Login</Typography>
         <AuthContext.Provider value={{ handleLogin }}>
           <LoginForm
             username={username}
@@ -71,10 +70,11 @@ const Login = () => {
             setShowPassword={setShowPassword}
           />
         </AuthContext.Provider>
-      </div>
+      </Container>
     </>
   );
 };
+
 
 const LoginForm = ({
   username,
@@ -86,86 +86,135 @@ const LoginForm = ({
   fetchRealtyList,
   showPassword,
   setShowPassword
-}: {
-  username: string;
-  setUsername: (value: string) => void;
-  password: string;
-  setPassword: (value: string) => void;
-  hierarchy: string;
-  setHierarchy: (value: string) => void;
-  realtyList: {
-    id: number;
-    name: string;
-  }[];
-  fetchRealtyList: () => void;
-  showPassword: boolean;
-  setShowPassword: (value: boolean) => void;
-}) => {
+}: LoginFormProps) => {
   const { handleLogin } = useContext(AuthContext);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     handleLogin({ username, password, hierarchy });
   };
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xs">
-      <div className="mb-4">
-        <label htmlFor="username" className="block mb-2">
-          Usuário:
-        </label>
-        <input
-          type="text"
-          id="username"
-          className="form-input w-full px-3 py-2 border border-gray-300 rounded"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </div>
-      <div className="mb-4 flex items-center space-x-2">
-        <div className="flex-grow">
-          <label htmlFor="password" className="block mb-2">
-            Senha:
-          </label>
-          <input
-            type={showPassword ? 'text' : 'password'}
-            id="password"
-            className="form-input w-full px-3 py-2 border border-gray-300 rounded"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+    <form onSubmit={handleSubmit} noValidate>
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="username"
+        label="Username"
+        name="username"
+        autoComplete="username"
+        autoFocus
+        value={username}
+        onChange={e => setUsername(e.target.value)}
+        sx={{
+          backgroundColor: '#f3f3f3', 
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#673ab7', 
+            },
+            '&:hover fieldset': {
+              borderColor: '#5e35b1', 
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#5e35b1', 
+            }
+          }
+        }}
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        name="password"
+        label="Password"
+        type={showPassword ? 'text' : 'password'}
+        id="password"
+        autoComplete="current-password"
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        sx={{
+          backgroundColor: '#f3f3f3', 
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#673ab7', 
+            },
+            '&:hover fieldset': {
+              borderColor: '#5e35b1', 
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#5e35b1', 
+            }
+          }
+        }}
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={showPassword}
+            onChange={toggleShowPassword}
+            sx={{
+              color: '#673ab7', 
+              '&.Mui-checked': {
+                color: '#673ab7', 
+              }
+            }}
           />
-        </div>
-        <button
-          type="button"
-          onClick={toggleShowPassword}
-          className="bg-transparent hover:bg-gray-200 text-black font-semibold border border-gray-300 rounded text-lg"
-          aria-label={showPassword ? 'Hide password' : 'Show password'}
-        >
-          {showPassword ? <FiEyeOff /> : <FiEye />}
-        </button>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="hierarchy" className="block mb-2">
-          Hierarquia:
-        </label>
-        <input
-          type="text"
-          id="hierarchy"
-          className="form-input w-full px-3 py-2 border border-gray-300 rounded"
-          value={hierarchy}
-          onChange={(e) => setHierarchy(e.target.value)}
-          onFocus={fetchRealtyList}
-          required
-        />
-      </div>
-      <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        }
+        label={showPassword ? 'Hide Password' : 'Show Password'}
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="hierarchy"
+        label="Hierarchy"
+        name="hierarchy"
+        autoComplete="hierarchy"
+        value={hierarchy}
+        onChange={e => setHierarchy(e.target.value)}
+        onFocus={fetchRealtyList}
+        sx={{
+          backgroundColor: '#f3f3f3', 
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#673ab7', 
+            },
+            '&:hover fieldset': {
+              borderColor: '#5e35b1',
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#5e35b1', 
+            }
+          }
+        }}
+      />
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        sx={{
+          mt: 3,
+          py: 1.5,
+          px: 3,
+          color: 'white',
+          backgroundColor: '#673ab7',
+          ':hover': {
+            bgcolor: '#5e35b1'
+          },
+          ':focus': {
+            bgcolor: '#5e35b1'
+          }
+        }}
+      >
         Login
-      </button>
+      </Button>
     </form>
   );
 };

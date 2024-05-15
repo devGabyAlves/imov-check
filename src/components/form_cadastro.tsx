@@ -1,9 +1,6 @@
-import axios from "axios";
-import { useState } from "react";
-import FormButton from "./FormButton";
-import FormContainer from "./FormContainer";
-import FormField from "./FormField";
-import Header from "./Header";
+import React, { useState } from 'react';
+import { Container, TextField, Button, FormControl, InputLabel, Select, MenuItem, Typography, Grid } from '@mui/material';
+import Header from './Header';
 
 const Formulario = () => {
   const [idImovel, setIdImovel] = useState("");
@@ -21,159 +18,148 @@ const Formulario = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    try {
-      const response = await axios.post("URL_DA_API", {
-        idImovel,
-        data,
-        vistoriador,
-        corretor,
-        tipoVistoria,
-        endereco,
-        metragem,
-        mobiliado,
-        locador,
-        locatario,
-        testemunha,
-        administradora,
-      });
-      console.log("Resposta da API:", response.data);
-    } catch (error) {
-      console.error("Erro ao enviar o formulário:", error);
-    }
   };
 
   return (
     <>
       <Header />
-      <FormContainer>
+      <Container maxWidth="md">
+      <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
+          Formulário de Vistoria
+        </Typography>
         <form onSubmit={handleSubmit}>
-          <FormField
-            label="ID-Imóvel:"
-            type="text"
-            value={idImovel}
-            onChange={(e) => setIdImovel(e.target.value)}
-            placeholder="Digite o ID do Imóvel"
-          />
-          <FormField
-            label="Data:"
-            type="date"
-            value={data}
-            onChange={(e) => setData(e.target.value)}
-            placeholder="Escolha uma data"
-          />
-          <FormField
-            label="Vistoriador:"
-            type="text"
-            value={vistoriador}
-            onChange={(e) => setVistoriador(e.target.value)}
-            placeholder="Nome do Vistoriador"
-          />
-          <FormField
-            label="Corretor:"
-            type="text"
-            value={corretor}
-            onChange={(e) => setCorretor(e.target.value)}
-            placeholder="Nome do Corretor"
-          />
-
-          <div className="flex flex-col mb-5">
-            <label htmlFor="tipoVistoria">Tipo de Vistoria:</label>
-
-            <select
-              id="tipoVistoria"
-              value={tipoVistoria}
-              onChange={(e) => setTipoVistoria(e.target.value)}
-              className="mb-5 p-2.5 border border-gray-300 rounded-md text-lg w-full"
-            >
-              <option value="">Selecione</option>
-              <option value="entrada">Entrada</option>
-              <option value="saida">Saída</option>
-            </select>
-          </div>
-
-          <FormField
-            label="Endereço (CEP):"
-            type="text"
-            value={endereco.cep}
-            onChange={(e) => setEndereco({ ...endereco, cep: e.target.value })}
-            placeholder="Digite o CEP"
-          />
-          <FormField
-            label="Endereço (Bairro):"
-            type="text"
-            value={endereco.bairro}
-            onChange={(e) => setEndereco({ ...endereco, bairro: e.target.value })}
-            placeholder="Digite o Bairro"
-          />
-          <FormField
-            label="Endereço (Número):"
-            type="text"
-            value={endereco.numero}
-            onChange={(e) => setEndereco({ ...endereco, numero: e.target.value })}
-            placeholder="Digite o Número"
-          />
-          <FormField
-            label="Endereço (Complemento):"
-            type="text"
-            value={endereco.complemento}
-            onChange={(e) => setEndereco({ ...endereco, complemento: e.target.value })}
-            placeholder="Digite o Complemento"
-          />
-          <FormField
-            label="Metragem do Imóvel:"
-            type="number"
-            value={metragem}
-            onChange={(e) => setMetragem(e.target.value)}
-            placeholder="Metragem em m²"
-          />
-
-          <div className="flex flex-col mb-5">
-            <label htmlFor="mobiliado">Mobiliado:</label>
-
-            <select
-              id="mobiliado"
-              value={mobiliado}
-              onChange={(e) => setMobiliado(e.target.value)}
-              className="mb-5 p-2.5 border border-gray-300 rounded-md text-lg w-full"
-            >
-              <option value="">Selecione</option>
-              <option value="sim">Sim</option>
-              <option value="nao">Não</option>
-            </select>
-          </div>
-
-          <FormField
-            label="Locador:"
-            type="text"
-            value={locador}
-            onChange={(e) => setLocador(e.target.value)}
-            placeholder="Nome do Locador"
-          />
-          <FormField
-            label="Locatário:"
-            type="text"
-            value={locatario}
-            onChange={(e) => setLocatario(e.target.value)}
-            placeholder="Nome do Locatário"
-          />
-          <FormField
-            label="Testemunha:"
-            type="text"
-            value={testemunha}
-            onChange={(e) => setTestemunha(e.target.value)}
-            placeholder="Nome da Testemunha"
-          />
-          <FormField
-            label="Administradora:"
-            type="text"
-            value={administradora}
-            onChange={(e) => setAdministradora(e.target.value)}
-            placeholder="Nome da Administradora"
-          />
-          <FormButton>Enviar</FormButton>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="ID-Imóvel:"
+                variant="outlined"
+                value={idImovel}
+                onChange={(e) => setIdImovel(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Data:"
+                type="date"
+                variant="outlined"
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+                margin="normal"
+                InputLabelProps={{ shrink: true }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Vistoriador:"
+                variant="outlined"
+                value={vistoriador}
+                onChange={(e) => setVistoriador(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Corretor:"
+                variant="outlined"
+                value={corretor}
+                onChange={(e) => setCorretor(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="tipoVistoria-label">Tipo de Vistoria</InputLabel>
+                <Select
+                  labelId="tipoVistoria-label"
+                  id="tipoVistoria"
+                  value={tipoVistoria}
+                  label="Tipo de Vistoria"
+                  onChange={(e) => setTipoVistoria(e.target.value)}
+                >
+                  <MenuItem value="entrada">Entrada</MenuItem>
+                  <MenuItem value="saida">Saída</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Metragem do Imóvel:"
+                type="number"
+                variant="outlined"
+                value={metragem}
+                onChange={(e) => setMetragem(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth margin="normal">
+                <InputLabel id="mobiliado-label">Mobiliado</InputLabel>
+                <Select
+                  labelId="mobiliado-label"
+                  id="mobiliado"
+                  value={mobiliado}
+                  label="Mobiliado"
+                  onChange={(e) => setMobiliado(e.target.value)}
+                >
+                  <MenuItem value="sim">Sim</MenuItem>
+                  <MenuItem value="nao">Não</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Locador:"
+                variant="outlined"
+                value={locador}
+                onChange={(e) => setLocador(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Locatário:"
+                variant="outlined"
+                value={locatario}
+                onChange={(e) => setLocatario(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Testemunha:"
+                variant="outlined"
+                value={testemunha}
+                onChange={(e) => setTestemunha(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Administradora:"
+                variant="outlined"
+                value={administradora}
+                onChange={(e) => setAdministradora(e.target.value)}
+                margin="normal"
+              />
+            </Grid>
+          </Grid>
+          <Grid container justifyContent="center" sx={{ mt: 3 }}>
+            <Button type="submit" variant="contained" sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}>
+              Enviar
+            </Button>
+          </Grid>
         </form>
-      </FormContainer>
+      </Container>
     </>
   );
 };

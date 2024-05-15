@@ -19,3 +19,5 @@
     width: calc(100% - 20px); /* Para telas menores que 768px, exibe apenas um componente por linha */
   }
 }
+
+
