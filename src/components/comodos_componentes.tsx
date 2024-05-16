@@ -68,6 +68,9 @@ const Componente = () => {
     <Box>
       <Header />
       <Menu />
+      <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
+          Detalhes do Imóvel 
+        </Typography>
       <Grid container spacing={2} sx={{ p: 2 }}>
         {componentes.map((componente, index) => (
           <Grid item xs={12} sm={6} md={4} key={index}>

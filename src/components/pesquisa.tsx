@@ -27,7 +27,7 @@ const Pesquisa = () => {
         </Typography>
         <Typography variant="body1" paragraph>
           Use o ID para buscar seu imóvel cadastrado. Se o imóvel não estiver registrado, utilize o botão
-          <span style={{ color: '#673ab7' }}> 'Cadastro' </span>
+          <span style={{ color: '#673ab7' }}> 'Menu' </span>
           acima para adicioná-lo.
         </Typography>
         <StyledTextField variant="outlined" placeholder="Digite sua pesquisa" />

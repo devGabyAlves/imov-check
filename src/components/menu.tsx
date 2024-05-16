@@ -29,7 +29,7 @@ const Dropdown = () => {
         sx={{ color: 'white', backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}
         onClick={handleClick}
       >
-        Cadastro
+        Menu
       </Button>
       <Menu
         anchorEl={anchorEl}
@@ -45,10 +45,10 @@ const Dropdown = () => {
         }}
       >
         <MenuItem onClick={() => handleOptionClick('Novo Imóvel')} component={Link} to="/cadastro_imovel">
-          Imóvel
+          Novo Imóvel
         </MenuItem>
         <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/cadastro_corretor">
-          Corretor
+          Novo Corretor
         </MenuItem>
         <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/pesquisa">
           Pesquisa
