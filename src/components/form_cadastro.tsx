@@ -11,6 +11,7 @@ import {
   Grid
 } from '@mui/material';
 import Header from './Header';
+import Menu from './menu';
 
 const Formulario = () => {
   const [idImovel, setIdImovel] = useState('');
@@ -32,6 +33,7 @@ const Formulario = () => {
   return (
     <>
       <Header />
+      <Menu />
       <Container maxWidth="md">
         <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
           Formulário de Vistoria

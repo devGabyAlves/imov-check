@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 const Dropdown = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState('');
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,10 +44,21 @@ const Dropdown = () => {
           horizontal: 'right'
         }}
       >
-        <MenuItem onClick={() => handleOptionClick("Novo Imóvel")} component={Link} to="/cadastro_imovel">Imóvel</MenuItem>
-        <MenuItem onClick={() => handleOptionClick("Novo Corretor")} component={Link} to="/cadastro_corretor">Corretor</MenuItem>
+        <MenuItem onClick={() => handleOptionClick('Novo Imóvel')} component={Link} to="/cadastro_imovel">
+          Imóvel
+        </MenuItem>
+        <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/cadastro_corretor">
+          Corretor
+        </MenuItem>
+        <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/pesquisa">
+          Pesquisa
+        </MenuItem>
       </Menu>
-      {selectedOption && <Typography color="purple" sx={{ mt: 1 }}>Você selecionou: {selectedOption}</Typography>}
+      {selectedOption && (
+        <Typography color="purple" sx={{ mt: 1 }}>
+          Você selecionou: {selectedOption}
+        </Typography>
+      )}
     </div>
   );
 };

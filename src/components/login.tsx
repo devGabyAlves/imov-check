@@ -1,5 +1,5 @@
 import React, { FormEvent, useContext, useState } from 'react';
-import { Button, TextField, FormControlLabel, Checkbox, Typography, Container } from '@mui/material';
+import { Button, TextField, FormControlLabel, Checkbox, Typography, Container, Paper } from '@mui/material';
 import Header from './Header';
 
 interface UserData {
@@ -19,10 +19,6 @@ interface LoginFormProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   hierarchy: string;
   setHierarchy: React.Dispatch<React.SetStateAction<string>>;
-  realtyList: {
-    id: number;
-    name: string;
-  }[];
   fetchRealtyList: () => void;
   showPassword: boolean;
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
@@ -34,7 +30,6 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [hierarchy, setHierarchy] = useState('');
-  const [realtyList] = useState([]);
   const [showPassword, setShowPassword] = useState(false);
 
   const fetchRealtyList = async () => {};
@@ -46,30 +41,33 @@ const Login = () => {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    width: '100vw'
+    maxWidth: '40rem'
   };
 
   return (
     <>
       <Header />
+
       <Container component="main" style={style}>
-        <Typography component="h1" variant="h5" sx={{ color: '#673ab7' }}>
-          Login
-        </Typography>
-        <AuthContext.Provider value={{ handleLogin }}>
-          <LoginForm
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-            hierarchy={hierarchy}
-            setHierarchy={setHierarchy}
-            realtyList={realtyList}
-            fetchRealtyList={fetchRealtyList}
-            showPassword={showPassword}
-            setShowPassword={setShowPassword}
-          />
-        </AuthContext.Provider>
+        <Paper elevation={4} sx={{ p: '2rem', borderRadius: '0.5rem' }}>
+          <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
+            Login
+          </Typography>
+
+          <AuthContext.Provider value={{ handleLogin }}>
+            <LoginForm
+              username={username}
+              setUsername={setUsername}
+              password={password}
+              setPassword={setPassword}
+              hierarchy={hierarchy}
+              setHierarchy={setHierarchy}
+              fetchRealtyList={fetchRealtyList}
+              showPassword={showPassword}
+              setShowPassword={setShowPassword}
+            />
+          </AuthContext.Provider>
+        </Paper>
       </Container>
     </>
   );
