@@ -11,10 +11,21 @@ const StyledBox = styled(Box)(({ theme }) => ({
   marginTop: '30px'
 }));
 
-const StyledTextField = styled(TextField)({
+const StyledTextField = styled(TextField)(({  }) => ({
   width: '50%',
-  marginBottom: '20px'
-});
+  marginBottom: '20px',
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: '#5e35b1', 
+    },
+    '&:hover fieldset': {
+      borderColor: '#5e35b1',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: '#5e35b1', 
+    },
+  },
+}));
 
 const Pesquisa = () => {
   return (
