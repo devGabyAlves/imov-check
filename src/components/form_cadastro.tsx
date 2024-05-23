@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Container,
   TextField,
@@ -12,6 +12,13 @@ import {
 } from '@mui/material';
 import Header from './Header';
 import Menu from './menu';
+import axios from 'axios';
+
+interface Imobiliaria {
+  id: string;
+  name: string;
+}
+
 
 const Formulario = () => {
   const [idImovel, setIdImovel] = useState('');
@@ -24,11 +31,28 @@ const Formulario = () => {
   const [locador, setLocador] = useState('');
   const [locatario, setLocatario] = useState('');
   const [testemunha, setTestemunha] = useState('');
-  const [administradora, setAdministradora] = useState('');
+  const [imobiliaria, setImobiliaria] = useState('');
+  const [imobiliarias, setImobiliarias] = useState<Imobiliaria[]>([]);
 
-  const handleSubmit = async (event: React.FormEvent) => {
+
+  useEffect(() => {
+    const fetchImobiliarias = async () => {
+      try {
+        const response = await axios.get('http://172.174.192.190/get-real-states-list');
+        setImobiliarias(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar imobiliárias:', error);
+      }
+    };
+    fetchImobiliarias();
+  }, []);
+
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
+
+  const isFormComplete = idImovel && data && vistoriador && corretor && tipoVistoria && metragem && mobiliado && locador && locatario && testemunha && imobiliaria 
 
   return (
     <>
@@ -36,7 +60,7 @@ const Formulario = () => {
       <Menu />
       <Container maxWidth="md">
         <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
-          Formulário de Vistoria
+          Cadstro de Vistoria
         </Typography>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -155,23 +179,31 @@ const Formulario = () => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
+                select
                 fullWidth
-                label="Administradora:"
+                label="Imobiliária:"
+                value={imobiliaria}
+                onChange={(e) => setImobiliaria(e.target.value)}
                 variant="outlined"
-                value={administradora}
-                onChange={(e) => setAdministradora(e.target.value)}
-                margin="normal"
-              />
+                required
+              >
+                {imobiliarias.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
           </Grid>
           <Grid container justifyContent="center" sx={{ mt: 3 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}
-            >
-              Enviar
-            </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={!isFormComplete}
+            sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}
+          >
+            Enviar
+          </Button>
           </Grid>
         </form>
       </Container>

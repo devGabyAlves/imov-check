@@ -1,25 +1,61 @@
 import axios from 'axios';
-import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Grid } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Container, TextField, Button, Typography, Grid, MenuItem, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material';
 import Header from './Header';
 import Menu from './menu';
+
+interface Imobiliaria {
+  id: string;
+  name: string;
+}
 
 const FormCadastroCorretor = () => {
   const [name, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
+  const [creci, setCreci] = useState('');
+  const [imobiliaria, setImobiliaria] = useState('');
+  const [tipoUsuario, setTipoUsuario] = useState('');
+  const [imobiliarias, setImobiliarias] = useState<Imobiliaria[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalContent, setModalContent] = useState({ title: '', message: '' });
+
+  useEffect(() => {
+    const fetchImobiliarias = async () => {
+      try {
+        const response = await axios.get('http://172.174.192.190/get-real-states-list');
+        setImobiliarias(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar imobiliárias:', error);
+      }
+    };
+    fetchImobiliarias();
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = { name, email, senha, confirmarSenha };
+    const data = {
+      real_state_name: imobiliaria, 
+      name,
+      email,
+      password: senha,
+      creci,
+      type_user: tipoUsuario.toLowerCase()
+    };
     try {
-      const response = await axios.post('URL_DA_API', data);
+      const response = await axios.post('http://172.174.192.190/broker-registration', data);
       console.log('Dados enviados com sucesso:', response.data);
-    } catch (error) {
-      console.error('Erro ao enviar dados:', error);
+      setModalContent({ title: "Sucesso", message: "Usuário cadastrado com sucesso!" });
+      setOpenModal(true);
+    } catch (error: any) {
+      const errorMessage = error.response ? error.response.data.message : "Erro ao enviar dados.";
+      setModalContent({ title: "Erro", message: errorMessage });
+      setOpenModal(true);
     }
   };
+
+  const isFormComplete = name && email && senha && confirmarSenha && creci && imobiliaria && tipoUsuario;
 
   return (
     <>
@@ -27,7 +63,7 @@ const FormCadastroCorretor = () => {
       <Menu />
       <Container maxWidth="md">
         <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
-          Formulário de Corretor
+          Cadastro de Corretor
         </Typography>
 
         <form onSubmit={handleSubmit}>
@@ -82,11 +118,57 @@ const FormCadastroCorretor = () => {
               />
             </Grid>
 
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="CRECI:"
+                variant="outlined"
+                value={creci}
+                onChange={(e) => setCreci(e.target.value)}
+                placeholder="Digite seu CRECI"
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <TextField
+                select
+                fullWidth
+                label="Imobiliária:"
+                value={imobiliaria}
+                onChange={(e) => setImobiliaria(e.target.value)}
+                variant="outlined"
+                required
+              >
+                {imobiliarias.map((option) => (
+                  <MenuItem key={option.id} value={option.id}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              fullWidth
+              label="Tipo de Usuário:"
+              value={tipoUsuario}
+              onChange={(e) => setTipoUsuario(e.target.value)}
+              variant="outlined"
+              required
+            >
+              <MenuItem value="Administrador">Administrador</MenuItem>
+              <MenuItem value="Usuário">Comum</MenuItem>
+            </TextField>
+          </Grid>
+
             <Grid item xs={12}>
               <Button
                 fullWidth
                 type="submit"
                 variant="contained"
+                disabled={!isFormComplete}
                 sx={{ backgroundColor: '#673ab7', '&:hover': { backgroundColor: '#5e35b1' } }}
               >
                 Enviar
@@ -94,6 +176,17 @@ const FormCadastroCorretor = () => {
             </Grid>
           </Grid>
         </form>
+        <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+          <DialogTitle>{modalContent.title}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {modalContent.message}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenModal(false)} color="primary">Fechar</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );
