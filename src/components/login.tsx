@@ -1,6 +1,12 @@
-import React, { FormEvent, useContext, useState } from 'react';
-import { Button, TextField, FormControlLabel, Checkbox, Typography, Container, Paper } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, TextField, FormControlLabel, Checkbox, Typography, Container, Paper, MenuItem, Select, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import axios from 'axios';
 import Header from './Header';
+
+interface RealtyItem {
+  id: string;
+  name: string;
+}
 
 interface UserData {
   username: string;
@@ -22,6 +28,7 @@ interface LoginFormProps {
   fetchRealtyList: () => void;
   showPassword: boolean;
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
+  realtyList: RealtyItem[];
 }
 
 const AuthContext = React.createContext<AuthContextI>({} as AuthContextI);
@@ -31,29 +38,49 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [hierarchy, setHierarchy] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [realtyList, setRealtyList] = useState<RealtyItem[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const fetchRealtyList = async () => {};
-  const handleLogin = async () => {};
-
-  const style: React.CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    maxWidth: '40rem'
+  const handleLogin = async (userData: UserData) => {
+    try {
+      const response = await axios.post('http://172.174.192.190/login', {
+        real_state: userData.hierarchy,
+        username: userData.username,
+        password: userData.password
+      });
+      localStorage.setItem('token', response.data.token); 
+      window.location.href = '/pesquisa'; 
+    } catch (error: any) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message || 'Erro desconhecido'); 
+      } else {
+        setErrorMessage('Erro de conexão com o servidor');
+      }
+      setOpenModal(true);
+    }
   };
+
+  useEffect(() => {
+    const fetchRealtyList = async () => {
+      try {
+        const response = await axios.get('http://172.174.192.190/get-real-states-list');
+        setRealtyList(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar dados da API:', error);
+      }
+    };
+    fetchRealtyList();
+  }, []);
 
   return (
     <>
       <Header />
-
-      <Container component="main" style={style}>
+      <Container component="main" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', maxWidth: '40rem' }}>
         <Paper elevation={4} sx={{ p: '2rem', borderRadius: '0.5rem' }}>
           <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
             Login
           </Typography>
-
           <AuthContext.Provider value={{ handleLogin }}>
             <LoginForm
               username={username}
@@ -62,13 +89,27 @@ const Login = () => {
               setPassword={setPassword}
               hierarchy={hierarchy}
               setHierarchy={setHierarchy}
-              fetchRealtyList={fetchRealtyList}
+              fetchRealtyList={() => {}}
               showPassword={showPassword}
               setShowPassword={setShowPassword}
+              realtyList={realtyList}
             />
           </AuthContext.Provider>
         </Paper>
       </Container>
+      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
+        <DialogTitle>Erro ao Entrar</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            {errorMessage}
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenModal(false)} color="primary">
+            Fechar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
@@ -80,13 +121,13 @@ const LoginForm = ({
   setPassword,
   hierarchy,
   setHierarchy,
-  fetchRealtyList,
   showPassword,
-  setShowPassword
+  setShowPassword,
+  realtyList
 }: LoginFormProps) => {
   const { handleLogin } = useContext(AuthContext);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     handleLogin({ username, password, hierarchy });
   };
@@ -149,48 +190,51 @@ const LoginForm = ({
           }
         }}
       />
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showPassword}
-            onChange={toggleShowPassword}
-            sx={{
-              color: '#673ab7',
-              '&.Mui-checked': {
-                color: '#673ab7'
-              }
-            }}
-          />
-        }
-        label={showPassword ? 'Hide Password' : 'Show Password'}
-      />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
+      <Box mt={2}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showPassword}
+              onChange={toggleShowPassword}
+              sx={{
+                color: '#673ab7',
+                '&.Mui-checked': {
+                  color: '#673ab7'
+                }
+              }}
+            />
+          }
+          label={showPassword ? 'Hide Password' : 'Show Password'}
+        />
+      </Box>
+      <Select
+        labelId="hierarchy-label"
         id="hierarchy"
-        label="Hierarchy"
-        name="hierarchy"
-        autoComplete="hierarchy"
         value={hierarchy}
+        label="Hierarchy"
         onChange={(e) => setHierarchy(e.target.value)}
-        onFocus={fetchRealtyList}
+        fullWidth
         sx={{
           backgroundColor: '#f3f3f3',
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#673ab7'
+              borderColor: '#673ab7',
             },
             '&:hover fieldset': {
-              borderColor: '#5e35b1'
+              borderColor: '#5e35b1',
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1'
-            }
-          }
+              borderColor: '#5e35b1',
+            },
+          },
         }}
-      />
+      >
+        {realtyList.map((item) => (
+          <MenuItem key={item.id} value={item.id}>
+            {item.name}
+          </MenuItem>
+        ))}
+      </Select>
       <Button
         type="submit"
         fullWidth
@@ -214,6 +258,6 @@ const LoginForm = ({
       </Button>
     </form>
   );
-};
+}
 
-export default Login;
+export default Login
