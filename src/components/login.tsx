@@ -65,7 +65,12 @@ const Login = () => {
     const fetchRealtyList = async () => {
       try {
         const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        setRealtyList(response.data);
+        // Transformando a lista de strings em objetos com id e name
+        const list = response.data.map((item: string, index: number) => ({
+          id: index.toString(),  // Convertendo index para string para usar como id
+          name: item
+        }));
+        setRealtyList(list);
       } catch (error) {
         console.error('Erro ao buscar dados da API:', error);
       }
@@ -230,7 +235,7 @@ const LoginForm = ({
         }}
       >
         {realtyList.map((item) => (
-          <MenuItem key={item.id} value={item.id}>
+          <MenuItem key={item.id} value={item.name}>
             {item.name}
           </MenuItem>
         ))}

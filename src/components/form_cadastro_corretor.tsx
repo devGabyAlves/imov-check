@@ -25,26 +25,51 @@ const FormCadastroCorretor = () => {
     const fetchImobiliarias = async () => {
       try {
         const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        setImobiliarias(response.data);
+        const imobiliariaData = response.data.map((nomeImobiliaria: string, index: number) => ({
+          id: index.toString(), 
+          name: nomeImobiliaria 
+        }));
+        setImobiliarias(imobiliariaData);
       } catch (error) {
         console.error('Erro ao buscar imobiliárias:', error);
       }
     };
     fetchImobiliarias();
   }, []);
+  
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+  
+    const emailRegex = /\S+@\S+\.\S+/;
+    if (!emailRegex.test(email)) {
+      setModalContent({ title: "Erro de Validação", message: "Por favor, insira um e-mail válido." });
+      setOpenModal(true);
+      return;
+    }
+  
+    if (senha !== confirmarSenha) {
+      setModalContent({ title: "Erro de Validação", message: "As senhas não coincidem." });
+      setOpenModal(true);
+      return;
+    }
+  
+    const token = localStorage.getItem('token');
     const data = {
-      real_state_name: imobiliaria, 
+      real_state_name: imobiliaria,
       name,
       email,
       password: senha,
       creci,
       type_user: tipoUsuario.toLowerCase()
     };
+  
     try {
-      const response = await axios.post('http://172.174.192.190/broker-registration', data);
+      const response = await axios.post('http://172.174.192.190/broker-registration', data, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       console.log('Dados enviados com sucesso:', response.data);
       setModalContent({ title: "Sucesso", message: "Usuário cadastrado com sucesso!" });
       setOpenModal(true);
@@ -141,7 +166,7 @@ const FormCadastroCorretor = () => {
                 required
               >
                 {imobiliarias.map((option) => (
-                  <MenuItem key={option.id} value={option.id}>
+                  <MenuItem key={option.id} value={option.name}>
                     {option.name}
                   </MenuItem>
                 ))}
