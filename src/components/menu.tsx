@@ -44,6 +44,9 @@ const Dropdown = () => {
           horizontal: 'right'
         }}
       >
+        <MenuItem onClick={() => handleOptionClick('Imoveis')} component={Link} to="/imoveis">
+          Imoveis
+        </MenuItem>
         <MenuItem onClick={() => handleOptionClick('Novo Imóvel')} component={Link} to="/cadastro_imovel">
           Novo Imóvel
         </MenuItem>
