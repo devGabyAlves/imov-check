@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 
 const Dropdown = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [selectedOption, setSelectedOption] = useState('');
+  const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -21,6 +25,12 @@ const Dropdown = () => {
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     handleClose();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token'); 
+    handleClose();
+    navigate('/login'); 
   };
 
   return (
@@ -44,14 +54,20 @@ const Dropdown = () => {
           horizontal: 'right'
         }}
       >
-         <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/cadastro_corretor">
+        <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/cadastro_corretor">
           Novo Corretor
         </MenuItem>
         <MenuItem onClick={() => handleOptionClick('Novo Imóvel')} component={Link} to="/cadastro_imovel">
           Novo Imóvel
         </MenuItem>
-        <MenuItem onClick={() => handleOptionClick('Novo Corretor')} component={Link} to="/pesquisa">
+        <MenuItem onClick={() => handleOptionClick('Pesquisa')} component={Link} to="/pesquisa">
           Pesquisa
+        </MenuItem>
+        <MenuItem onClick={handleLogout}>
+          <IconButton edge="start" color="inherit" aria-label="logout">
+            <ExitToAppIcon />
+          </IconButton>
+          Sair
         </MenuItem>
       </Menu>
       {selectedOption && (
