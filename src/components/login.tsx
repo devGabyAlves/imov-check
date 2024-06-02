@@ -1,34 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
 import {
-  Button,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Typography,
-  Container,
-  Paper,
-  MenuItem,
-  Select,
   Box,
+  Button,
+  Checkbox,
+  Container,
   Dialog,
-  DialogTitle,
+  DialogActions,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogTitle,
+  FormControlLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography
 } from '@mui/material';
 import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLogin, UserData } from '../contexts/Login';
 import Header from './Header';
-import { redirect } from 'react-router-dom';
 
 interface RealtyItem {
   id: string;
   name: string;
-}
-
-interface UserData {
-  username: string;
-  password: string;
-  hierarchy: string;
 }
 
 type AuthContextI = {
@@ -59,22 +53,13 @@ const Login = () => {
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleLogin = async (userData: UserData) => {
-    try {
-      const response = await axios.post('http://172.174.192.190/login', {
-        real_state: userData.hierarchy,
-        username: userData.username,
-        password: userData.password
-      });
-      localStorage.setItem('token', response.data.token);
+  const { handleLoginCtx } = useLogin();
 
-      return redirect('/pesquisa');
-    } catch (error: any) {
-      if (error.response) {
-        setErrorMessage(error.response.data.message || 'Erro desconhecido');
-      } else {
-        setErrorMessage('Erro de conexão com o servidor');
-      }
+  const handleLogin = async (userData: UserData) => {
+    const response = await handleLoginCtx(userData);
+
+    if (response) {
+      setErrorMessage(response);
       setOpenModal(true);
     }
   };
@@ -114,7 +99,7 @@ const Login = () => {
           <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
             Login
           </Typography>
-          <AuthContext.Provider value={{ handleLogin }}>
+          <AuthContext.Provider value={{ handleLogin: handleLogin }}>
             <LoginForm
               username={username}
               setUsername={setUsername}
