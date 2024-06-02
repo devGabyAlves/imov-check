@@ -82,9 +82,7 @@ const Formulario = () => {
 
       setForm(initialForm);
     } catch (error: any) {
-      const errorMessage = error.response ? error.response.data.message : 'Erro ao enviar dados.';
-      // setModalContent({ title: 'Erro', message: errorMessage });
-      // setOpenModal(true);
+      console.error('Erro ao enviar dados:', error.response.data);
     }
   };
 
