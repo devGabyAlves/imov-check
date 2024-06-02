@@ -13,9 +13,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import Menu from './menu';
+import { useLogin } from '../contexts/Login';
 
 const Formulario = () => {
   const [realEstates, setRealEstates] = useState<string[]>([]);
+  const { username } = useLogin();
 
   const initialForm = {
     cod_property: '',
@@ -23,8 +25,8 @@ const Formulario = () => {
     surveyor: '',
     broker: '',
     inspection_date: '',
-    metreage: '',
-    furnished: '',
+    metreage: 0,
+    furnished: false,
     locator: '',
     tenant: '',
     witness: '',
@@ -64,7 +66,7 @@ const Formulario = () => {
       locator: form.locator,
       tenant: form.tenant,
       witness: form.witness,
-      administrator: '',
+      administrator: username,
       cod_property: form.cod_property
     };
 
@@ -173,7 +175,7 @@ const Formulario = () => {
                 variant="outlined"
                 margin="normal"
                 value={form.metreage}
-                onChange={(e) => setForm({ ...form, metreage: e.target.value })}
+                onChange={(e) => setForm({ ...form, metreage: +e.target.value })}
               />
             </Grid>
 
@@ -186,11 +188,11 @@ const Formulario = () => {
                   id="mobiliado"
                   label="Mobiliado"
                   value={form.furnished}
-                  onChange={(e) => setForm({ ...form, furnished: e.target.value })}
+                  onChange={(e) => setForm({ ...form, furnished: e.target.value === 'true' ? true : false })}
                 >
-                  <MenuItem value="sim">Sim</MenuItem>
+                  <MenuItem value="true">Sim</MenuItem>
 
-                  <MenuItem value="nao">Não</MenuItem>
+                  <MenuItem value="false">Não</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
