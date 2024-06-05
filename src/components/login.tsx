@@ -56,6 +56,7 @@ const Login = () => {
   const { handleLoginCtx } = useLogin();
 
   const handleLogin = async (userData: UserData) => {
+    await handleLoginCtx(userData);
     try {
       const response = await axios.post('http://172.174.192.190/login', {
         real_state: userData.hierarchy,
