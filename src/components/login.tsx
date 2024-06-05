@@ -56,10 +56,20 @@ const Login = () => {
   const { handleLoginCtx } = useLogin();
 
   const handleLogin = async (userData: UserData) => {
-    const response = await handleLoginCtx(userData);
-
-    if (response) {
-      setErrorMessage(response);
+    try {
+      const response = await axios.post('http://172.174.192.190/login', {
+        real_state: userData.hierarchy,
+        username: userData.username,
+        password: userData.password
+      });
+      localStorage.setItem('token', response.data.token); 
+      window.location.href = '/pesquisa'; 
+    } catch (error: any) {
+      if (error.response) {
+        setErrorMessage(error.response.data.message || 'Erro desconhecido'); 
+      } else {
+        setErrorMessage('Erro de conexão com o servidor');
+      }
       setOpenModal(true);
     }
   };
@@ -68,9 +78,8 @@ const Login = () => {
     const fetchRealtyList = async () => {
       try {
         const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        // Transformando a lista de strings em objetos com id e name
         const list = response.data.map((item: string, index: number) => ({
-          id: index.toString(), // Convertendo index para string para usar como id
+          id: index.toString(),
           name: item
         }));
         setRealtyList(list);
