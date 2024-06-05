@@ -86,6 +86,31 @@ const Componente = () => {
   const [novoNomeComponente, setNovoNomeComponente] = useState('');
   const [fotoModal, setFotoModal] = useState<string | null>(null);
 
+  const handleRegisterData = async () => {
+    const results = await Promise.all(componentes.map(async (componente) => {
+      const { name, description, photos } = componente;
+
+      const photosBase64 = await Promise.all(photos.map(async (photo) => {
+        const response = await fetch(photo);
+        const blob = await response.blob();
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      }));
+
+      return {
+        name,
+        description,
+        photos: photosBase64
+      };
+    }));
+
+    console.log('Payload:', results);
+  };
+
   const handleDescricaoChange = (index: number, event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const novosComponentes = [...componentes];
     novosComponentes[index].description = event.target.value;
@@ -111,14 +136,6 @@ const Componente = () => {
     setNovoNomeComponente('');
   };
 
-  const abrirModal = (foto: string) => {
-    setFotoModal(foto);
-  };
-
-  const fecharModal = () => {
-    setFotoModal(null);
-  };
-
   const handleExtrairRelatorio = () => {
     axios
       .post('URL_DA_API/relatorio', {
@@ -129,10 +146,17 @@ const Componente = () => {
       .catch((error) => console.error('Erro ao extrair relatório:', error));
   };
 
+  const abrirModal = (foto: string) => {
+    setFotoModal(foto);
+  };
+
+  const fecharModal = () => {
+    setFotoModal(null);
+  };
+
   return (
     <Box>
       <Header />
-
       <Menu />
 
       <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
@@ -202,6 +226,15 @@ const Componente = () => {
             style={{ flex: 1 }}
           >
             Extrair relatório
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={handleRegisterData}
+            sx={{ backgroundColor: '#673ab7', color: '#fff', '&:hover': { backgroundColor: '#5e35b1' } }}
+            style={{ flex: 1 }}
+          >
+            Register All Data
           </Button>
         </Stack>
       </Stack>
