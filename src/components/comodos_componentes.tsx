@@ -87,28 +87,31 @@ const Componente = () => {
   const [fotoModal, setFotoModal] = useState<string | null>(null);
 
   const handleRegisterData = async () => {
-    const results = await Promise.all(componentes.map(async (componente) => {
-      const { name, description, photos } = componente;
-
-      const photosBase64 = await Promise.all(photos.map(async (photo) => {
-        const response = await fetch(photo);
-        const blob = await response.blob();
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
+    try {
+      const formData = new FormData();
+      componentes.forEach((componente, index) => {
+        formData.append(`components[${index}][name]`, componente.name);
+        formData.append(`components[${index}][description]`, componente.description);
+        componente.photos.forEach((photo, photoIndex) => {
+          fetch(photo)
+            .then(res => res.blob())
+            .then(blob => {
+              const file = new File([blob], `image${photoIndex}.jpg`, { type: 'image/jpeg' });
+              formData.append(`components[${index}][photos][${photoIndex}]`, file);
+            });
         });
-      }));
-
-      return {
-        name,
-        description,
-        photos: photosBase64
-      };
-    }));
-
-    console.log('Payload:', results);
+      });
+      setTimeout(async () => {
+        const response = await axios.post('http://172.174.192.190/imovel-register', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+        console.log('Dados enviados com sucesso:', response.data);
+      }, 1000);
+    } catch (error) {
+      console.error('Erro ao enviar dados:', error);
+    }
   };
 
   const handleDescricaoChange = (index: number, event: React.ChangeEvent<HTMLTextAreaElement>) => {
