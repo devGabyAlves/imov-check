@@ -1,17 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Button, TextField, FormControlLabel, Checkbox, Typography, Container, Paper, MenuItem, Select, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControlLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography
+} from '@mui/material';
 import axios from 'axios';
+import React, { useContext, useEffect, useState } from 'react';
+import { useLogin, UserData } from '../contexts/Login';
 import Header from './Header';
 
 interface RealtyItem {
   id: string;
   name: string;
-}
-
-interface UserData {
-  username: string;
-  password: string;
-  hierarchy: string;
 }
 
 type AuthContextI = {
@@ -42,7 +53,10 @@ const Login = () => {
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const { handleLoginCtx } = useLogin();
+
   const handleLogin = async (userData: UserData) => {
+    await handleLoginCtx(userData);
     try {
       const response = await axios.post('http://172.174.192.190/login', {
         real_state: userData.hierarchy,
@@ -65,9 +79,8 @@ const Login = () => {
     const fetchRealtyList = async () => {
       try {
         const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        // Transformando a lista de strings em objetos com id e name
         const list = response.data.map((item: string, index: number) => ({
-          id: index.toString(),  // Convertendo index para string para usar como id
+          id: index.toString(),
           name: item
         }));
         setRealtyList(list);
@@ -81,12 +94,22 @@ const Login = () => {
   return (
     <>
       <Header />
-      <Container component="main" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', maxWidth: '40rem' }}>
+      <Container
+        component="main"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          maxWidth: '40rem'
+        }}
+      >
         <Paper elevation={4} sx={{ p: '2rem', borderRadius: '0.5rem' }}>
           <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
             Login
           </Typography>
-          <AuthContext.Provider value={{ handleLogin }}>
+          <AuthContext.Provider value={{ handleLogin: handleLogin }}>
             <LoginForm
               username={username}
               setUsername={setUsername}
@@ -105,9 +128,7 @@ const Login = () => {
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
         <DialogTitle>Erro ao Entrar</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {errorMessage}
-          </DialogContentText>
+          <DialogContentText>{errorMessage}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="primary">
@@ -223,15 +244,15 @@ const LoginForm = ({
           backgroundColor: '#f3f3f3',
           '& .MuiOutlinedInput-root': {
             '& fieldset': {
-              borderColor: '#673ab7',
+              borderColor: '#673ab7'
             },
             '&:hover fieldset': {
-              borderColor: '#5e35b1',
+              borderColor: '#5e35b1'
             },
             '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1',
-            },
-          },
+              borderColor: '#5e35b1'
+            }
+          }
         }}
       >
         {realtyList.map((item) => (
@@ -263,6 +284,6 @@ const LoginForm = ({
       </Button>
     </form>
   );
-}
+};
 
-export default Login
+export default Login;
