@@ -11,8 +11,6 @@ import {
   Typography
 } from '@mui/material';
 import Header from './Header';
-import Menu from './menu';
-
 import { styled } from '@mui/system';
 
 const blue = {
@@ -160,8 +158,6 @@ const Componente = () => {
   return (
     <Box>
       <Header />
-      <Menu />
-
       <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
         Detalhes do Imóvel
       </Typography>

@@ -9,21 +9,14 @@ import {
   DialogContentText,
   DialogTitle,
   FormControlLabel,
-  MenuItem,
   Paper,
-  Select,
   TextField,
-  Typography
+  Typography,
+  Link
 } from '@mui/material';
 import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import { useLogin, UserData } from '../contexts/Login';
-import Header from './Header';
-
-interface RealtyItem {
-  id: string;
-  name: string;
-}
 
 type AuthContextI = {
   handleLogin: (userData: UserData) => void;
@@ -34,12 +27,8 @@ interface LoginFormProps {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   password: string;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
-  hierarchy: string;
-  setHierarchy: React.Dispatch<React.SetStateAction<string>>;
-  fetchRealtyList: () => void;
   showPassword: boolean;
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
-  realtyList: RealtyItem[];
 }
 
 const AuthContext = React.createContext<AuthContextI>({} as AuthContextI);
@@ -47,9 +36,7 @@ const AuthContext = React.createContext<AuthContextI>({} as AuthContextI);
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [hierarchy, setHierarchy] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [realtyList, setRealtyList] = useState<RealtyItem[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -59,7 +46,6 @@ const Login = () => {
     await handleLoginCtx(userData);
     try {
       const response = await axios.post('http://172.174.192.190/login', {
-        real_state: userData.hierarchy,
         username: userData.username,
         password: userData.password
       });
@@ -75,25 +61,8 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchRealtyList = async () => {
-      try {
-        const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        const list = response.data.map((item: string, index: number) => ({
-          id: index.toString(),
-          name: item
-        }));
-        setRealtyList(list);
-      } catch (error) {
-        console.error('Erro ao buscar dados da API:', error);
-      }
-    };
-    fetchRealtyList();
-  }, []);
-
   return (
     <>
-      <Header />
       <Container
         component="main"
         style={{
@@ -107,7 +76,7 @@ const Login = () => {
       >
         <Paper elevation={4} sx={{ p: '2rem', borderRadius: '0.5rem' }}>
           <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
-            Login
+            Login ImovCheck
           </Typography>
           <AuthContext.Provider value={{ handleLogin: handleLogin }}>
             <LoginForm
@@ -115,12 +84,8 @@ const Login = () => {
               setUsername={setUsername}
               password={password}
               setPassword={setPassword}
-              hierarchy={hierarchy}
-              setHierarchy={setHierarchy}
-              fetchRealtyList={() => {}}
               showPassword={showPassword}
               setShowPassword={setShowPassword}
-              realtyList={realtyList}
             />
           </AuthContext.Provider>
         </Paper>
@@ -145,17 +110,14 @@ const LoginForm = ({
   setUsername,
   password,
   setPassword,
-  hierarchy,
-  setHierarchy,
   showPassword,
-  setShowPassword,
-  realtyList
+  setShowPassword
 }: LoginFormProps) => {
   const { handleLogin } = useContext(AuthContext);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    handleLogin({ username, password, hierarchy });
+    handleLogin({ username, password });
   };
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
@@ -233,34 +195,6 @@ const LoginForm = ({
           label={showPassword ? 'Hide Password' : 'Show Password'}
         />
       </Box>
-      <Select
-        labelId="hierarchy-label"
-        id="hierarchy"
-        value={hierarchy}
-        label="Hierarchy"
-        onChange={(e) => setHierarchy(e.target.value)}
-        fullWidth
-        sx={{
-          backgroundColor: '#f3f3f3',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#673ab7'
-            },
-            '&:hover fieldset': {
-              borderColor: '#5e35b1'
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1'
-            }
-          }
-        }}
-      >
-        {realtyList.map((item) => (
-          <MenuItem key={item.id} value={item.name}>
-            {item.name}
-          </MenuItem>
-        ))}
-      </Select>
       <Button
         type="submit"
         fullWidth
@@ -282,6 +216,11 @@ const LoginForm = ({
       >
         Login
       </Button>
+      <Box mt={2} textAlign="center">
+        <Link href="/forgot-password" variant="body2" sx={{ color: '#673ab7' }}>
+          Esqueci a senha
+        </Link>
+      </Box>
     </form>
   );
 };
