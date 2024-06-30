@@ -1,73 +1,41 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { Container, TextField, Button, Typography, Grid, MenuItem, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, TextField, Button, Typography, Grid, MenuItem, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box } from '@mui/material';
 import Header from './Header';
-import Menu from './menu';
 
-interface Imobiliaria {
-  id: string;
-  name: string;
-}
 
 const FormCadastroCorretor = () => {
   const [name, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [confirmarSenha, setConfirmarSenha] = useState('');
   const [creci, setCreci] = useState('');
-  const [imobiliaria, setImobiliaria] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
-  const [imobiliarias, setImobiliarias] = useState<Imobiliaria[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', message: '' });
 
-  useEffect(() => {
-    const fetchImobiliarias = async () => {
-      try {
-        const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        const imobiliariaData = response.data.map((nomeImobiliaria: string, index: number) => ({
-          id: index.toString(), 
-          name: nomeImobiliaria 
-        }));
-        setImobiliarias(imobiliariaData);
-      } catch (error) {
-        console.error('Erro ao buscar imobiliárias:', error);
-      }
-    };
-    fetchImobiliarias();
-  }, []);
-  
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-  
+
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(email)) {
       setModalContent({ title: "Erro de Validação", message: "Por favor, insira um e-mail válido." });
       setOpenModal(true);
       return;
     }
-  
-    if (senha !== confirmarSenha) {
-      setModalContent({ title: "Erro de Validação", message: "As senhas não coincidem." });
-      setOpenModal(true);
-      return;
-    }
-  
+
+    const realStateName = localStorage.getItem('realtyName');
     const token = localStorage.getItem('token');
     const data = {
-      real_state_name: imobiliaria,
+      real_state_name: realStateName,
       name,
       email,
-      password: senha,
       creci,
       type_user: tipoUsuario.toLowerCase()
     };
-  
+
     try {
       const response = await axios.post('http://172.174.192.190/broker-registration', data, {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': token
         }
       });
       console.log('Dados enviados com sucesso:', response.data);
@@ -80,16 +48,19 @@ const FormCadastroCorretor = () => {
     }
   };
 
-  const isFormComplete = name && email && senha && confirmarSenha && creci && imobiliaria && tipoUsuario;
+  const isFormComplete = name && email && creci && tipoUsuario;
 
   return (
     <>
       <Header />
-      <Menu />
       <Container maxWidth="md">
         <Typography variant="h4" sx={{ mt: 10, mb: 2, color: '#673ab7', textAlign: 'center' }}>
           Cadastro de Corretor
         </Typography>
+
+        <Box display="flex" justifyContent="center" mb={4}>
+          <img src="https://i.ibb.co/7QKY079/novo-corretor.png" alt="Imagem de Corretor" style={{ maxWidth: '50%', height: 'auto', borderRadius: '8px' }} />
+        </Box>
 
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
@@ -122,30 +93,6 @@ const FormCadastroCorretor = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
-                label="Senha:"
-                type="password"
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
-                placeholder="Digite sua senha"
-                required
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                label="Confirmar Senha:"
-                type="password"
-                value={confirmarSenha}
-                onChange={(e) => setConfirmarSenha(e.target.value)}
-                placeholder="Digite sua senha novamente"
-                required
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
                 label="CRECI:"
                 variant="outlined"
                 value={creci}
@@ -159,34 +106,16 @@ const FormCadastroCorretor = () => {
               <TextField
                 select
                 fullWidth
-                label="Imobiliária:"
-                value={imobiliaria}
-                onChange={(e) => setImobiliaria(e.target.value)}
+                label="Tipo de Usuário:"
+                value={tipoUsuario}
+                onChange={(e) => setTipoUsuario(e.target.value)}
                 variant="outlined"
                 required
               >
-                {imobiliarias.map((option) => (
-                  <MenuItem key={option.id} value={option.name}>
-                    {option.name}
-                  </MenuItem>
-                ))}
+                <MenuItem value="Administrador">Administrador</MenuItem>
+                <MenuItem value="Usuário">Comum</MenuItem>
               </TextField>
             </Grid>
-
-            <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              fullWidth
-              label="Tipo de Usuário:"
-              value={tipoUsuario}
-              onChange={(e) => setTipoUsuario(e.target.value)}
-              variant="outlined"
-              required
-            >
-              <MenuItem value="Administrador">Administrador</MenuItem>
-              <MenuItem value="Usuário">Comum</MenuItem>
-            </TextField>
-          </Grid>
 
             <Grid item xs={12}>
               <Button
