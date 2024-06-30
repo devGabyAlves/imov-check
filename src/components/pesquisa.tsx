@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Header from './Header';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -9,7 +9,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  marginTop: theme.spacing(12), // Adicionado espaçamento superior
+  marginTop: theme.spacing(12), 
   [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1),
   },

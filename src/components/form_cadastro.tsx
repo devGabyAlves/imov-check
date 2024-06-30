@@ -9,8 +9,6 @@ import {
   TextField,
   Typography,
   Box,
-  Checkbox,
-  FormControlLabel
 } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
@@ -18,7 +16,6 @@ import Header from './Header';
 import { useLogin } from '../contexts/Login';
 
 const Formulario = () => {
-  const [realEstates, setRealEstates] = useState<string[]>([]);
   const { username } = useLogin();
 
   const initialForm = {
@@ -55,7 +52,6 @@ const Formulario = () => {
     const fetchImobiliarias = async () => {
       try {
         const response = await axios.get('http://172.174.192.190/get-real-states-list');
-        setRealEstates(response.data);
         console.log('Imobiliárias:', response.data);
       } catch (error) {
         console.error('Erro ao buscar imobiliárias:', error);
@@ -111,7 +107,7 @@ const Formulario = () => {
     }
   };
 
-  const isFormComplete = Object.values(form).every((value) => value);
+  const isFormComplete = Object.values(form).every((value) => value !== '' && value !== null);
 
   return (
     <>

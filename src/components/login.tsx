@@ -15,12 +15,8 @@ import {
   Link
 } from '@mui/material';
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useLogin, UserData } from '../contexts/Login';
-
-type AuthContextI = {
-  handleLogin: (userData: UserData) => void;
-};
 
 interface LoginFormProps {
   username: string;
@@ -29,31 +25,34 @@ interface LoginFormProps {
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   showPassword: boolean;
   setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
+  hierarchy: string;
+  setHierarchy: React.Dispatch<React.SetStateAction<string>>;
+  handleLogin: (userData: UserData) => Promise<void>;
 }
-
-const AuthContext = React.createContext<AuthContextI>({} as AuthContextI);
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [hierarchy, setHierarchy] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   const { handleLoginCtx } = useLogin();
 
   const handleLogin = async (userData: UserData) => {
-    await handleLoginCtx(userData);
     try {
+      await handleLoginCtx(userData);
       const response = await axios.post('http://172.174.192.190/login', {
         username: userData.username,
-        password: userData.password
+        password: userData.password,
+        hierarchy: userData.hierarchy
       });
-      localStorage.setItem('token', response.data.token); 
-      window.location.href = '/pesquisa'; 
+      localStorage.setItem('token', response.data.token);
+      window.location.href = '/pesquisa';
     } catch (error: any) {
       if (error.response) {
-        setErrorMessage(error.response.data.message || 'Erro desconhecido'); 
+        setErrorMessage(error.response.data.message || 'Erro desconhecido');
       } else {
         setErrorMessage('Erro de conexão com o servidor');
       }
@@ -78,16 +77,17 @@ const Login = () => {
           <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
             Login ImovCheck
           </Typography>
-          <AuthContext.Provider value={{ handleLogin: handleLogin }}>
-            <LoginForm
-              username={username}
-              setUsername={setUsername}
-              password={password}
-              setPassword={setPassword}
-              showPassword={showPassword}
-              setShowPassword={setShowPassword}
-            />
-          </AuthContext.Provider>
+          <LoginForm
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            hierarchy={hierarchy}
+            setHierarchy={setHierarchy}
+            handleLogin={handleLogin}
+          />
         </Paper>
       </Container>
       <Dialog open={openModal} onClose={() => setOpenModal(false)}>
@@ -111,13 +111,14 @@ const LoginForm = ({
   password,
   setPassword,
   showPassword,
-  setShowPassword
+  setShowPassword,
+  hierarchy,
+  setHierarchy,
+  handleLogin
 }: LoginFormProps) => {
-  const { handleLogin } = useContext(AuthContext);
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    handleLogin({ username, password });
+    handleLogin({ username, password, hierarchy });
   };
 
   const toggleShowPassword = () => setShowPassword(!showPassword);
@@ -163,6 +164,32 @@ const LoginForm = ({
         autoComplete="current-password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        sx={{
+          backgroundColor: '#f3f3f3',
+          '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+              borderColor: '#673ab7'
+            },
+            '&:hover fieldset': {
+              borderColor: '#5e35b1'
+            },
+            '&.Mui-focused fieldset': {
+              borderColor: '#5e35b1'
+            }
+          }
+        }}
+      />
+      <TextField
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        name="hierarchy"
+        label="Hierarchy"
+        type="text"
+        id="hierarchy"
+        value={hierarchy}
+        onChange={(e) => setHierarchy(e.target.value)}
         sx={{
           backgroundColor: '#f3f3f3',
           '& .MuiOutlinedInput-root': {

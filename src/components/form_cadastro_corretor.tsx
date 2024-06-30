@@ -1,19 +1,14 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
-import { Container, TextField, Button, Typography, Grid, MenuItem, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, CircularProgress, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, TextField, Button, Typography, Grid, MenuItem, Dialog, DialogContent, DialogContentText, DialogTitle, DialogActions, Box } from '@mui/material';
 import Header from './Header';
 
-interface Imobiliaria {
-  id: string;
-  name: string;
-}
 
 const FormCadastroCorretor = () => {
   const [name, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [creci, setCreci] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('');
-  const [loading, setLoading] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [modalContent, setModalContent] = useState({ title: '', message: '' });
 
