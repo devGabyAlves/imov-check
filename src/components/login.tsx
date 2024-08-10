@@ -1,254 +1,183 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  FormControlLabel,
-  Paper,
-  TextField,
-  Typography,
-  Link
-} from '@mui/material';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { useLogin, UserData } from '../contexts/Login';
-
-interface LoginFormProps {
-  username: string;
-  setUsername: React.Dispatch<React.SetStateAction<string>>;
-  password: string;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
-  showPassword: boolean;
-  setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
-  hierarchy: string;
-  setHierarchy: React.Dispatch<React.SetStateAction<string>>;
-  handleLogin: (userData: UserData) => Promise<void>;
-}
+import { Container, Typography, TextField, Button, Box, Link, IconButton, InputAdornment } from '@mui/material';
+import { useState } from 'react';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import '../styles/login.scss';
 
 const Login = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [hierarchy, setHierarchy] = useState('');
-  const [openModal, setOpenModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
 
-  const { handleLoginCtx } = useLogin();
+  const validateEmail = (email: string) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+  };
 
-  const handleLogin = async (userData: UserData) => {
-    try {
-      await handleLoginCtx(userData);
-      const response = await axios.post('http://172.174.192.190/login', {
-        username: userData.username,
-        password: userData.password,
-        hierarchy: userData.hierarchy
-      });
-      localStorage.setItem('token', response.data.token);
-      window.location.href = '/pesquisa';
-    } catch (error: any) {
-      if (error.response) {
-        setErrorMessage(error.response.data.message || 'Erro desconhecido');
-      } else {
-        setErrorMessage('Erro de conexão com o servidor');
-      }
-      setOpenModal(true);
+  const handleLogin = async () => {
+    if (!validateEmail(email)) {
+      setEmailError('Por favor, insira um email válido.');
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setEmailError(null);
+
+    // Simula a requisição de login
+    setTimeout(() => {
+      setLoading(false);
+      // Lógica de autenticação
+      console.log('Autenticando:', { email, password });
+    }, 2000);
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (!validateEmail(e.target.value)) {
+      setEmailError('Por favor, insira um email válido.');
+    } else {
+      setEmailError(null);
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <>
-      <Container
-        component="main"
-        style={{
+    <Container
+      maxWidth={false}
+      disableGutters
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          width: { xs: '100%', md: '50%' },
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          height: '100vh',
-          maxWidth: '40rem'
+          padding: '50px 20px',
         }}
       >
-        <Paper elevation={4} sx={{ p: '2rem', borderRadius: '0.5rem' }}>
-          <Typography component="h1" variant="h5" sx={{ color: '#673ab7', textAlign: 'center' }}>
-            Login ImovCheck
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '400px',
+            textAlign: 'center',
+            padding: 4,
+            borderRadius: 2,
+            boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.2)',
+            backgroundColor: 'white', 
+          }}
+        >
+          <Typography variant="h4" sx={{ color: '#673ab7', mb: 2 }}>
+            Login
           </Typography>
-          <LoginForm
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-            showPassword={showPassword}
-            setShowPassword={setShowPassword}
-            hierarchy={hierarchy}
-            setHierarchy={setHierarchy}
-            handleLogin={handleLogin}
+          <TextField
+            variant="outlined"
+            label="Email"
+            fullWidth
+            margin="normal"
+            value={email}
+            onChange={handleEmailChange}
+            error={!!emailError}
+            helperText={emailError}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#673ab7',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#673ab7',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#673ab7',
+                },
+              },
+            }}
           />
-        </Paper>
-      </Container>
-      <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-        <DialogTitle>Erro ao Entrar</DialogTitle>
-        <DialogContent>
-          <DialogContentText>{errorMessage}</DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenModal(false)} color="primary">
-            Fechar
+          <TextField
+            variant="outlined"
+            label="Senha"
+            type={showPassword ? 'text' : 'password'}
+            fullWidth
+            margin="normal"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#673ab7',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#673ab7',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#673ab7',
+                },
+              },
+            }}
+            InputProps={{
+             
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={toggleShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          {error && (
+            <Typography color="error" sx={{ mt: 2 }}>
+              {error}
+            </Typography>
+          )}
+          <Link href="/esqueceu-senha" sx={{ display: 'block', mt: 2, color: '#673ab7', cursor: 'pointer' }}>
+            Esqueceu a senha?
+          </Link>
+          <Button
+            variant="contained"
+            fullWidth
+            onClick={handleLogin}
+            disabled={loading || !!emailError}
+            sx={{
+              backgroundColor: '#673ab7',
+              ':hover': {
+              backgroundColor: '#5e35b1',
+              transform: 'scale(1.05)',
+              color: '#fdd835',
+            },
+              mt: 3,
+            }}
+          >
+            {loading ? 'Carregando...' : 'Entrar'}
           </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  );
-};
-
-const LoginForm = ({
-  username,
-  setUsername,
-  password,
-  setPassword,
-  showPassword,
-  setShowPassword,
-  hierarchy,
-  setHierarchy,
-  handleLogin
-}: LoginFormProps) => {
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    handleLogin({ username, password, hierarchy });
-  };
-
-  const toggleShowPassword = () => setShowPassword(!showPassword);
-
-  return (
-    <form onSubmit={handleSubmit} noValidate>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="username"
-        label="Username"
-        name="username"
-        autoComplete="username"
-        autoFocus
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        sx={{
-          backgroundColor: '#f3f3f3',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#673ab7'
-            },
-            '&:hover fieldset': {
-              borderColor: '#5e35b1'
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1'
-            }
-          }
-        }}
-      />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        name="password"
-        label="Password"
-        type={showPassword ? 'text' : 'password'}
-        id="password"
-        autoComplete="current-password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        sx={{
-          backgroundColor: '#f3f3f3',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#673ab7'
-            },
-            '&:hover fieldset': {
-              borderColor: '#5e35b1'
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1'
-            }
-          }
-        }}
-      />
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        name="hierarchy"
-        label="Hierarchy"
-        type="text"
-        id="hierarchy"
-        value={hierarchy}
-        onChange={(e) => setHierarchy(e.target.value)}
-        sx={{
-          backgroundColor: '#f3f3f3',
-          '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-              borderColor: '#673ab7'
-            },
-            '&:hover fieldset': {
-              borderColor: '#5e35b1'
-            },
-            '&.Mui-focused fieldset': {
-              borderColor: '#5e35b1'
-            }
-          }
-        }}
-      />
-      <Box mt={2}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={showPassword}
-              onChange={toggleShowPassword}
-              sx={{
-                color: '#673ab7',
-                '&.Mui-checked': {
-                  color: '#673ab7'
-                }
-              }}
-            />
-          }
-          label={showPassword ? 'Hide Password' : 'Show Password'}
-        />
+        </Box>
       </Box>
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        sx={{
-          mt: 3,
-          py: 1.5,
-          px: 3,
-          color: 'white',
-          backgroundColor: '#673ab7',
-          ':hover': {
-            bgcolor: '#5e35b1'
-          },
-          ':focus': {
-            bgcolor: '#5e35b1'
-          }
-        }}
-      >
-        Login
-      </Button>
-      <Box mt={2} textAlign="center">
-        <Link href="/forgot-password" variant="body2" sx={{ color: '#673ab7' }}>
-          Esqueci a senha
-        </Link>
-      </Box>
-    </form>
+      <Box
+      sx={{
+        width: '50%',
+        display: { xs: 'none', md: 'block' },
+        backgroundImage: 'url(/src/assets/imovcheck.svg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    />
+    </Container>
   );
 };
 
